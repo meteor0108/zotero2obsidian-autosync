@@ -8,6 +8,7 @@ zotero2obsidian-autosync 제거 — 작업 스케줄러 작업만 지운다.
 param([string]$TaskName = 'zotero2obsidian-autosync')
 
 if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
+  Stop-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue      # 돌고 있는 감시 스크립트도 끈다
   Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
   Write-Host "작업 스케줄러에서 지웠습니다: $TaskName"
 }

@@ -5,7 +5,8 @@ zotero2obsidian-autosync 설치
   2. config.json 을 만든다
   3. Zotero 설정을 바꾼다 — 로컬 API 켜기, Better Notes 에 Pass 2 노트 템플릿 등록
      (Zotero 가 켜져 있으면 설정이 덮어써지므로 건너뛴다. Zotero 를 끄고 다시 실행하면 된다)
-  4. 작업 스케줄러에 주기 실행 작업을 등록한다 — 기본은 '사용 안 함' 상태. -EnableTask 로 바로 켤 수 있다
+  4. 작업 스케줄러에 감시 작업을 등록한다 — 로그온할 때 zotero_watch.ps1 을 창 없이 띄워,
+     Zotero 가 바뀌면 몇 초 안에 동기화한다. 기본은 '사용 안 함' 상태. -EnableTask 로 바로 켤 수 있다
 
   예:  powershell -ExecutionPolicy Bypass -File install.ps1 -VaultPath "C:\Users\me\Documents\Obsidian Vault"
 #>
@@ -14,7 +15,6 @@ param(
   [string]$PapersFolder = 'Papers',
   [string]$TemplateFolder = 'Templates',
   [string]$ImageFolder,
-  [int]$IntervalMinutes = 5,
   [string]$TaskName = 'zotero2obsidian-autosync',
   [switch]$EnableTask,
   [switch]$SkipZotero,
@@ -120,12 +120,14 @@ else {
 Step '작업 스케줄러'
 if ($SkipTask) { Write-Host '-SkipTask: 건너뜀' }
 else {
-  $vbs = Join-Path $Root 'scripts\zotero_sync_hidden.vbs'
+  # 로그온할 때 감시 스크립트를 띄운다. 매시간 트리거는 감시가 멈췄을 때 다시 띄우기 위한 것 (이미 돌고 있으면 무시됨)
+  $vbs = Join-Path $Root 'scripts\zotero_watch_hidden.vbs'
   $action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument "`"$vbs`""
-  $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes)
-  $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 10)
-  Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Description "Zotero -> Obsidian 논문 노트 동기화 ($Root)" -Force | Out-Null
-  if ($EnableTask) { Write-Host "등록하고 켰습니다: $TaskName ($IntervalMinutes 분마다)" }
+  $onLogon = New-ScheduledTaskTrigger -AtLogOn -User "$env:USERDOMAIN\$env:USERNAME"
+  $hourly = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Hours 1)
+  $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit ([TimeSpan]::Zero) -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
+  Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $onLogon, $hourly -Settings $settings -Description "Zotero -> Obsidian 논문 노트 동기화 ($Root)" -Force | Out-Null
+  if ($EnableTask) { Start-ScheduledTask -TaskName $TaskName; Write-Host "등록하고 켰습니다: $TaskName (Zotero 가 바뀌면 몇 초 안에 동기화)" }
   else {
     Disable-ScheduledTask -TaskName $TaskName | Out-Null
     Write-Host "등록했습니다 (지금은 '사용 안 함'): $TaskName"
@@ -140,5 +142,5 @@ Write-Host '3. 결과가 괜찮으면 한 번 실행:'
 Write-Host "     powershell -ExecutionPolicy Bypass -File `"$Root\scripts\zotero_sync.ps1`" -Force"
 if (-not $SkipTask -and -not $EnableTask) {
   Write-Host '4. 자동 실행 켜기:'
-  Write-Host "     Enable-ScheduledTask -TaskName $TaskName"
+  Write-Host "     Enable-ScheduledTask -TaskName $TaskName; Start-ScheduledTask -TaskName $TaskName"
 }

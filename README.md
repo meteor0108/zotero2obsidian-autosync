@@ -5,12 +5,13 @@ Zotero에 논문을 추가하면 Obsidian 볼트에 논문 노트가 자동으�
 - 새 논문 → 템플릿으로 노트 생성, 속성(저자·연도·학회·URL·Zotero 링크·PDF 링크) 자동 입력
 - Zotero의 Pass 2 노트(1~4번 섹션) → Obsidian 노트의 같은 이름 헤더 밑으로 복사, 그림 포함
 - Zotero 컬렉션 → 볼트의 폴더 (`Papers/<컬렉션>/`)
-- Obsidian 플러그인이 필요 없습니다. Windows 작업 스케줄러가 몇 분마다 스크립트를 실행합니다.
+- Obsidian 플러그인이 필요 없습니다. 로그온할 때 작업 스케줄러가 감시 스크립트를 띄우고, Zotero에서 무언가 바뀌면 **몇 초 안에** 동기화합니다.
 
 ```
-Zotero (로컬 API) ──5분마다──▶ scripts/zotero_sync.ps1 ──▶ 볼트의 .md 파일
-                  작업 스케줄러
+Zotero (로컬 API) ◀──5초마다 확인── scripts/zotero_watch.ps1 ──바뀌면──▶ scripts/zotero_sync.ps1 ──▶ 볼트의 .md 파일
 ```
+
+감시 스크립트는 5초마다 "가장 최근에 바뀐 아이템 하나"만 물어봐서 가볍습니다. 바뀐 게 있으면 입력이 5초 동안 멈출 때까지 기다렸다가 한 번 동기화합니다. Zotero에서 노트를 만들거나 고치면 보통 10초 안에 Obsidian에 반영됩니다.
 
 ## 준비물
 
@@ -38,14 +39,13 @@ Zotero (로컬 API) ──5분마다──▶ scripts/zotero_sync.ps1 ──▶ 
    | `-PapersFolder` | `Papers` | 논문 노트를 만들 볼트 안 폴더 |
    | `-TemplateFolder` | `Templates` | 템플릿을 복사할 볼트 안 폴더 |
    | `-ImageFolder` | Obsidian 첨부 폴더 + `\zotero` | Zotero 노트 그림을 복사할 폴더 |
-   | `-IntervalMinutes` | `5` | 동기화 주기 |
    | `-EnableTask` | 꺼짐 | 자동 실행을 바로 켬 |
 
    설치 스크립트가 하는 일:
    - 볼트에 `논문 노트.md` 템플릿을 복사합니다 (같은 이름이 있으면 건드리지 않음).
    - `config.json`을 만듭니다.
    - Zotero의 로컬 API를 켜고, Better Notes에 `[Item]Paper Pass 2` 노트 템플릿을 등록합니다. 원래 설정은 `prefs.js.bak-zotero2obsidian`으로 백업합니다.
-   - 작업 스케줄러에 `zotero2obsidian-autosync` 작업을 **꺼진 상태로** 등록합니다.
+   - 작업 스케줄러에 `zotero2obsidian-autosync` 작업을 **꺼진 상태로** 등록합니다. 로그온할 때 감시 스크립트를 창 없이 띄우고, 감시가 멈췄다면 매시간 다시 띄웁니다.
 4. Zotero를 켜고 **미리보기**로 무엇이 생길지 확인합니다. 파일은 쓰지 않습니다.
    ```powershell
    powershell -ExecutionPolicy Bypass -File scripts\zotero_sync.ps1 -DryRun
@@ -55,18 +55,25 @@ Zotero (로컬 API) ──5분마다──▶ scripts/zotero_sync.ps1 ──▶ 
    ```powershell
    powershell -ExecutionPolicy Bypass -File scripts\zotero_sync.ps1 -Force
    Enable-ScheduledTask -TaskName zotero2obsidian-autosync
+   Start-ScheduledTask -TaskName zotero2obsidian-autosync
    ```
 
 ## 쓰는 법
 
 1. Zotero에 논문을 추가합니다. 추가하기 전에 **컬렉션**(볼트의 폴더가 됨)과 **Short Title**(노트 이름이 됨)을 정해 두세요. 노트 이름과 폴더는 처음 만들 때 한 번 정해지고, 나중에 Zotero에서 바꿔도 따라 바뀌지 않습니다.
 2. 논문을 우클릭 → Better Notes 노트 템플릿 `[Item]Paper Pass 2`로 노트를 만들고 Zotero에서 정리합니다.
-3. 몇 분 뒤 Obsidian 노트의 1~4번 헤더 밑에 들어옵니다.
+3. 몇 초 뒤 Obsidian 노트의 1~4번 헤더 밑에 들어옵니다.
 
 - Obsidian 노트의 `%% zotero:start %%` ~ `%% zotero:end %%` 사이는 매번 **덮어씁니다.** 수정은 Zotero에서 하세요. 이 표시는 읽기 화면에서는 보이지 않습니다.
 - 그 밖의 부분(Pass 1, Pass 3, 한 줄 요약 등)은 Obsidian에서 자유롭게 쓰면 됩니다.
 - 속성은 **비어 있을 때만** 채웁니다. 직접 쓴 값은 덮어쓰지 않습니다.
 - 바로 동기화하려면 `scripts\zotero_sync.ps1 -Force`를 실행합니다.
+
+### 템플릿은 언제 적용되나
+
+- 템플릿은 **새 노트를 만들 때 한 번만** 씁니다. 스크립트가 돌 때마다 템플릿 파일을 새로 읽으므로, 템플릿을 고치면 **다음에 새로 만들어지는 노트부터** 바로 적용됩니다.
+- **이미 있는 노트의 형식은 바뀌지 않습니다.** 기존 노트에서는 1~4번 섹션의 `%% zotero:start %%` ~ `%% zotero:end %%` 사이와 비어 있는 속성만 채웁니다. Obsidian에서 직접 쓴 내용을 지우지 않기 위해서입니다. 그래서 노트가 이미 있는 논문에 Zotero에서 Pass 2 노트를 추가해도 내용만 들어가고 형식은 그대로입니다.
+- 기존 노트에 새 형식을 적용하려면 내용을 새 템플릿으로 직접 옮기세요. Obsidian에서 아무것도 쓰지 않은 노트라면 지우는 방법도 있습니다. 몇 초 안에 새 템플릿으로 다시 만들어집니다.
 
 ### 노트 이름 규칙
 
@@ -108,7 +115,8 @@ Zotero (로컬 API) ──5분마다──▶ scripts/zotero_sync.ps1 ──▶ 
 
 ## 문제 해결
 
-- **동기화가 안 된다** → Zotero가 켜져 있는지, 작업 스케줄러에서 작업이 '사용'인지 확인하세요. 스크립트는 Zotero에서 바뀐 게 없으면 바로 끝납니다.
+- **동기화가 안 된다** → Zotero가 켜져 있는지, 작업 스케줄러에서 작업이 '사용'이고 '실행 중'인지 확인하세요. 감시가 멈췄다면 `Start-ScheduledTask -TaskName zotero2obsidian-autosync`로 다시 띄웁니다.
+- **템플릿을 고쳤는데 반영이 안 된다** → 위의 "템플릿은 언제 적용되나"를 보세요. 이미 있는 노트에는 적용되지 않습니다.
 - **로컬 API 오류** → Zotero → 설정 → 고급 → "Allow other applications on this computer to communicate with Zotero"를 켭니다.
 - **무엇을 건너뛰었는지** → 저장소 폴더의 `zotero-sync.log`를 봅니다.
 - **한글이 깨진다** → `.ps1` 파일은 UTF-8 (BOM) 으로 저장되어 있어야 합니다. 편집기에서 다른 인코딩으로 저장하지 마세요.
@@ -125,4 +133,4 @@ Zotero (로컬 API) ──5분마다──▶ scripts/zotero_sync.ps1 ──▶ 
 ```powershell
 powershell -ExecutionPolicy Bypass -File uninstall.ps1
 ```
-작업 스케줄러 작업만 지웁니다. 볼트의 노트와 템플릿은 그대로 남습니다. Zotero 설정을 되돌리려면 Zotero를 끄고 `prefs.js.bak-zotero2obsidian`을 `prefs.js`로 복사하세요.
+감시 스크립트를 끄고 작업 스케줄러 작업을 지웁니다. 볼트의 노트와 템플릿은 그대로 남습니다. Zotero 설정을 되돌리려면 Zotero를 끄고 `prefs.js.bak-zotero2obsidian`을 `prefs.js`로 복사하세요.
