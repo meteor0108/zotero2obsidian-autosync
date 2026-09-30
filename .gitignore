@@ -1,0 +1,19 @@
+# 실행하면서 생기는 파일 (개인 기록)
+*.log
+.zotero-sync-state.json
+
+# 설치할 때 만들어지는 개인 설정 (볼트 경로 등)
+config.json
+config.json.bak
+
+# Zotero 설정 파일과 그 백업 (개인 정보 포함)
+prefs.js
+prefs.js.bak*
+
+# 옮기기 전 백업
+.backup/
+
+# Windows / 편집기 부산물
+Thumbs.db
+desktop.ini
+.vscode/
