@@ -1,8 +1,10 @@
 # zotero2obsidian-autosync
 
+[한국어](https://github.com/meteor0108/zotero2obsidian-autosync/tree/main) | **English**
+
 A **paper note template** for following S. Keshav's [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf) (the three-pass method) in Zotero and Obsidian, plus a tool that **automatically syncs** the notes you write in Zotero into Obsidian. Windows only.
 
-> This is the English branch. The Korean README and templates are on the [`main`](https://github.com/meteor0108/zotero2obsidian-autosync/tree/main) branch. The screenshots show a Korean setup, and the scripts still print their messages in Korean.
+> This is the English branch (`en`). The Korean README and templates are on `main`. The screenshots show a Korean setup, and the scripts still print their messages in Korean.
 
 ![Demo: writing a Pass 2 note in Zotero creates and fills the Obsidian paper note within seconds](docs/images/demo.gif)
 
