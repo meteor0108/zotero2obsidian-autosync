@@ -13,6 +13,9 @@ prefs.js.bak*
 # 옮기기 전 백업
 .backup/
 
+# 데모 원본 영상 (README에는 docs/images/demo.gif를 씁니다)
+/demo.mp4
+
 # Windows / 편집기 부산물
 Thumbs.db
 desktop.ini

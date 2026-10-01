@@ -47,7 +47,7 @@ if (-not $ImageFolder) {
   }
 }
 
-$tplName = '논문 노트.md'
+$tplName = 'paper-note.md'
 $tplDst = Join-Path (Join-Path $VaultPath $TemplateFolder) $tplName
 if (Test-Path -LiteralPath $tplDst) { Write-Host "템플릿이 이미 있어 그대로 둡니다: $tplDst" }
 else {

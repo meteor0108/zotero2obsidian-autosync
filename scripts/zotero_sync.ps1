@@ -34,7 +34,7 @@ function Cfg([string]$key, $default) { if ($cfg.ContainsKey($key) -and $cfg[$key
 $Vault     = [string](Cfg 'vaultPath' '')
 if (-not $Vault -or -not (Test-Path -LiteralPath $Vault)) { Write-Host "vaultPath 가 없거나 잘못됐습니다: $Vault"; exit 1 }
 $Papers    = Join-Path $Vault (Cfg 'papersFolder' 'Papers')
-$Template  = Join-Path $Vault (Cfg 'templatePath' 'Templates\논문 노트.md')
+$Template  = Join-Path $Vault (Cfg 'templatePath' 'Templates\paper-note.md')
 $ImgDir    = Join-Path $Vault (Cfg 'imageFolder' 'Attachments\zotero')
 $Sections  = @(Cfg 'sections' @('1. 기존 방법론', '2. 기존 방법론의 한계', '3. 방법론', '4. 실험 결과'))
 $StateFile = Join-Path $Root '.zotero-sync-state.json'
