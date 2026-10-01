@@ -11,111 +11,111 @@ pdf:
 field:
 subfield:
 pass:
-status: 안읽음
+status: unread
 rating:
 tags:
 created: {{date}}
 ---
 # {{title}}
 
-## 한 줄 요약
+## One-line summary
 
-> [!tip]-  (그래서 뭐가 새로운가? 반드시 한 문장으로. 여기를 비우지 마세요) 1차에서 추측으로 먼저 쓰고, 다 읽은 뒤 내 말로 다시 씁니다.
+> [!tip]-  (So what is new? Exactly one sentence. Do not leave this empty.) Write a guess during Pass 1, then rewrite it in your own words once you have finished reading.
 
 ---
 
-## Pass 1 · 훑어보기 (5~10분)
+## Pass 1 · Skim (5–10 min)
 
-> [!tip]- 무엇을 읽나 title, abstract, introduction은 집중해서 → section/subsection 제목만 → conclusion → reference는 훑기만. 수식·증명·세부 내용은 전부 건너뜁니다.
+> [!tip]- What to read: the title, abstract and introduction carefully → section and subsection headings only → the conclusion → glance over the references. Skip all math, proofs and details.
 
 ### 5C
 
-- **Category** (분석 / 새 방법 / 프로토타입 / 서베이):
-- **Context** (어느 논문들 위에 서 있나, 어떤 이론적 바탕인가):
-- **Correctness** (가정이 명확한가, 수상한 가정은?):
-- **Contributions** (저자가 주장하는 핵심 기여):
-- **Clarity** (5분 안에 핵심이 잡혔나):
+- **Category** (analysis / new method / prototype / survey):
+- **Context** (which papers does it build on, what is the theoretical basis):
+- **Correctness** (are the assumptions clear, do any look suspicious?):
+- **Contributions** (the main contributions the authors claim):
+- **Clarity** (did the main point come across within 5 minutes):
 
-### 레퍼런스 중 이미 읽은 것
+### References I have already read
 
 1. 
 
-### 계속 읽을까?
+### Keep reading?
 
-- [ ] 2차로 간다
--  여기서 멈춤 - 이유: 
-	  - [ ] 관심 없음
-	  - [ ] 사전지식 부족
-	  - [ ] 가정이 모호
-	  - [ ] 나중에 쓸 수도
-	  - [ ] 기타
+- [ ] Go on to Pass 2
+-  Stop here - reason: 
+	  - [ ] Not interested
+	  - [ ] Missing background
+	  - [ ] Assumptions are unclear
+	  - [ ] Might be useful later
+	  - [ ] Other
 
 ---
 
-## Pass 2 · 내용 파악 (~1시간)
+## Pass 2 · Grasp the content (~1 hour)
 
-> [!info]- 1~4번은 Zotero에서 채웁니다 (자동 동기화)
-> Zotero에서 논문 우클릭 → 노트 템플릿 `[Item]Paper Pass 2` 로 노트를 만들어 정리하면, zotero2obsidian-autosync 가 몇 초 안에 아래 네 헤더 밑으로 가져옵니다. 헤더 이름은 Zotero 노트의 h2 와 똑같아야 합니다.
-> 수정은 Zotero에서만 — `%% zotero:start %%` ~ `%% zotero:end %%` 사이는 매번 덮어씁니다.
+> [!info]- Sections 1–4 are filled in from Zotero (auto-sync)
+> In Zotero, right-click the paper → create a note from the note template `[Item]Paper Pass 2` and write there. zotero2obsidian-autosync copies it under the four headings below within seconds. The heading names must be identical to the h2 headings of the Zotero note.
+> Edit in Zotero only — everything between `%% zotero:start %%` and `%% zotero:end %%` is overwritten on every sync.
 
-### 1. 기존 방법론
+### 1. Prior work
 
-### 2. 기존 방법론의 한계
+### 2. Limitations of prior work
 
-### 3. 방법론
+### 3. Method
 
-### 4. 실험 결과
+### 4. Experiments
 
-### 핵심 주장과 근거
+### Main claims and evidence
 
-(2차가 끝나면 남에게 근거와 함께 설명할 수 있어야 합니다)
+(After Pass 2 you should be able to explain the paper to someone else, with evidence)
 
-| 주장  | 근거 (Fig/Table/§) | 설득력 |
+| Claim | Evidence (Fig/Table/§) | Convincing? |
 | --- | ---------------- | --- |
 |     |                  |     |
 
-### 막힌 곳
+### Where I got stuck
 
-(모르는 용어·약어, 이해 안 되는 기법, 근거 없는 주장)
+(Unknown terms and acronyms, techniques I did not understand, claims without evidence)
 
-→ 다음 행동: 
-- [ ] 여기서 정리 
-- [ ] 배경지식 공부 후 재독 
-- [ ] 3차로 간다
-
----
-
-## Pass 3 · 가상으로 다시 써보기 (1~5시간)
-
-> [!tip]- 핵심 저자와 같은 가정에서 출발해 내가 직접 다시 만든다면? 그 결과를 원문과 비교해 혁신과 숨은 실패·가정을 찾습니다. 리뷰어라면 반드시 합니다.
-
-### 가정 목록
-
-- 명시된 가정:
-- 암묵적 가정:
-
-### 나라면 이렇게 했다
-
-(문제 설정, 방법, 실험 설계에서 원문과 다른 선택과 그 이유)
-
-### 5. 내 생각 및 논문의 한계/의문
-
-(논문은 항상 자기 방법이 제일 좋다고 말합니다. 과장된 부분이 어디인지, 나라면 어떻게 개선할지 쓰세요. 누락된 인용, 실험·분석의 잠재적 문제도 여기에)
-
-### 내 글쓰기에 가져갈 것
-
-(섹션 구성, 그림 하나로 설득하는 방식, 증명 전개 등)
+→ Next step: 
+- [ ] Wrap up here 
+- [ ] Study the background, then reread 
+- [ ] Go on to Pass 3
 
 ---
 
-## 6. 관련 개념
+## Pass 3 · Virtually re-implement (1–5 hours)
 
-(이 논문의 기여가 걸려 있는 개념만. "읽는 데 필요한 개념"을 적으면 모든 논문에 같은 링크가 붙어 아무것도 구별하지 못합니다. 없으면 비워두세요)
+> [!tip]- If I started from the same assumptions as the authors and rebuilt the work myself, what would I do? Compare the result with the paper to find its innovations and its hidden failings and assumptions. A must if you are reviewing the paper.
+
+### Assumptions
+
+- Stated assumptions:
+- Implicit assumptions:
+
+### What I would have done
+
+(Choices that differ from the paper in problem setting, method or experiment design, and why)
+
+### 5. My thoughts, limitations and open questions
+
+(Every paper says its own method is the best. Write down where it overclaims and how you would improve it. Missing citations and potential problems with the experiments or analysis also go here)
+
+### What to take for my own writing
+
+(Section structure, persuading with a single figure, how a proof is laid out, and so on)
 
 ---
 
-## 읽고 나면
+## 6. Related concepts
 
-- [ ] 한 줄 요약을 내 말로 다시 썼는가 — 이게 안 되면 아직 이해 못 한 것
-- [ ] `pass` 를 실제로 끝낸 단계로
-- [ ] `status` 를 `정리됨` 으로
+(Only the concepts this paper's contribution hinges on. If you list "concepts needed to read it", every paper gets the same links and they stop telling papers apart. Leave it empty if there are none)
+
+---
+
+## After reading
+
+- [ ] Rewrote the one-line summary in my own words — if I cannot, I have not understood the paper yet
+- [ ] Set `pass` to the pass I actually finished
+- [ ] Set `status` to `done`

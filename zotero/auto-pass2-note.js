@@ -1,11 +1,11 @@
-// 논문에 Pass 2 노트가 없으면 Better Notes 템플릿으로 하나 만든다.
-// Zotero 의 Actions & Tags 플러그인에 액션으로 등록해 쓴다 (Operation: Script). 이 파일은 그 스크립트의 보관용 사본이다.
-//   Event: Create Item — 논문을 Zotero 에 추가했을 때
-//   Event: Open File   — PDF 를 열었을 때 (예전에 추가해 둔 논문용)
-// 바탕: https://github.com/windingwind/zotero-actions-tags/discussions/109
+// Creates a Pass 2 note from the Better Notes template when the paper does not have one yet.
+// Register it as an action in Zotero's Actions & Tags plugin (Operation: Script). This file is a reference copy of that script.
+//   Event: Create Item — when a paper is added to Zotero
+//   Event: Open File   — when a PDF is opened (for papers added earlier)
+// Based on: https://github.com/windingwind/zotero-actions-tags/discussions/109
 
 const TEMPLATE = "[Item]Paper Pass 2";
-const SECTIONS = ["1. 기존 방법론", "2. 기존 방법론의 한계", "3. 방법론", "4. 실험 결과"];
+const SECTIONS = ["1. Prior work", "2. Limitations of prior work", "3. Method", "4. Experiments"];
 
 if (!item) return;
 const paper = Zotero.Items.getTopLevel([item])[0];
@@ -13,10 +13,10 @@ if (!paper || !paper.isRegularItem()) return;
 
 const bn = Zotero.BetterNotes?.api;
 if (!bn?.note?.insert || !bn.template.getTemplateText(TEMPLATE)) {
-  return `[Pass 2] Better Notes 템플릿 "${TEMPLATE}" 을 찾지 못했습니다.`;
+  return `[Pass 2] Better Notes template "${TEMPLATE}" was not found.`;
 }
 
-// 이미 Pass 2 노트가 있으면 만들지 않는다 (zotero_sync.ps1 의 Test-Pass2Note 와 같은 기준)
+// Do nothing if a Pass 2 note already exists (same test as Test-Pass2Note in zotero_sync.ps1)
 const squash = (s) => s.replace(/<[^>]*>/g, "").replace(/&nbsp;|\s/g, "");
 const isPass2 = (html) =>
   /<h1[^>]*>\s*(<[^>]+>\s*)*Pass\s*2/i.test(html) ||
@@ -31,4 +31,4 @@ await note.saveTx();
 const html = await bn.template.runItemTemplate(TEMPLATE, { itemIds: [paper.id], targetNoteId: note.id });
 await bn.note.insert(note, html, -1);
 
-return `[Pass 2] 노트를 만들었습니다: ${paper.getField("title")}`;
+return `[Pass 2] Note created: ${paper.getField("title")}`;

@@ -67,7 +67,7 @@ $cfg = @"
   "templatePath": $(J (Join-Path $TemplateFolder $tplName)),
   "imageFolder": $(J $ImageFolder),
   "zoteroDataDir": "",
-  "sections": ["1. 기존 방법론", "2. 기존 방법론의 한계", "3. 방법론", "4. 실험 결과"]
+  "sections": ["1. Prior work", "2. Limitations of prior work", "3. Method", "4. Experiments"]
 }
 "@
 [IO.File]::WriteAllText($cfgPath, $cfg.Replace("`r`n", "`n"), $Utf8)

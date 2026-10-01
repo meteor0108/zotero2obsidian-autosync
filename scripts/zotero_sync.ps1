@@ -36,7 +36,7 @@ if (-not $Vault -or -not (Test-Path -LiteralPath $Vault)) { Write-Host "vaultPat
 $Papers    = Join-Path $Vault (Cfg 'papersFolder' 'Papers')
 $Template  = Join-Path $Vault (Cfg 'templatePath' 'Templates\paper-note.md')
 $ImgDir    = Join-Path $Vault (Cfg 'imageFolder' 'Attachments\zotero')
-$Sections  = @(Cfg 'sections' @('1. 기존 방법론', '2. 기존 방법론의 한계', '3. 방법론', '4. 실험 결과'))
+$Sections  = @(Cfg 'sections' @('1. Prior work', '2. Limitations of prior work', '3. Method', '4. Experiments'))
 $StateFile = Join-Path $Root '.zotero-sync-state.json'
 $LogFile   = Join-Path $Root 'zotero-sync.log'
 $Api       = 'http://127.0.0.1:23119/api/users/0'
@@ -243,7 +243,7 @@ function ConvertTo-Md([string]$html, [int]$headShift) {
   return $md.Trim()
 }
 
-# Pass 2 노트 HTML → @{ '1. 기존 방법론' = '<html>' ... }, 그리고 템플릿에 없는 h2 이름들
+# Pass 2 노트 HTML → @{ '1. Prior work' = '<html>' ... }, 그리고 템플릿에 없는 h2 이름들
 function Split-Pass2([string]$html) {
   $found = @{}; $other = @()
   $hs = [regex]::Matches($html, '(?is)<h2[^>]*>(.*?)</h2>')
