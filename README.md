@@ -1,5 +1,7 @@
 # zotero2obsidian-autosync
 
+**한국어** | [English](https://github.com/meteor0108/zotero2obsidian-autosync/tree/en)
+
 S. Keshav의 [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf)(three-pass 읽기법)를 Zotero와 Obsidian에서 그대로 따라 할 수 있게 만든 **논문 노트 템플릿**과, Zotero에서 정리한 노트를 Obsidian으로 **자동 동기화**하는 도구입니다. Windows 전용입니다.
 
 ![Zotero에서 Pass 2 노트를 쓰면 Obsidian 논문 노트가 몇 초 안에 생기고 채워지는 데모](docs/images/demo.gif)
