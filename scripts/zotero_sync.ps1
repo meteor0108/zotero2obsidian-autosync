@@ -4,11 +4,15 @@ Zotero → Obsidian 논문 노트 동기화 (Zotero 로컬 API 사용, Zotero가
   - Zotero에 새 논문이 있으면 템플릿(config.json 의 templatePath)으로 노트를 만든다.
       위치: <papersFolder>/<논문이 들어 있는 Zotero 최상위 컬렉션>/   (컬렉션이 없으면 <papersFolder>/)
       이름: <Short Title> (<연도>).md   — Short Title 이 없으면 제목의 ':' 앞부분
+  - 논문의 최상위 컬렉션이 바뀌면 노트도 그 컬렉션 폴더로 옮기고, field 가 예전 폴더 이름(또는 빈 값)이면 같이 바꾼다.
+    컬렉션에서 빠진 논문, <papersFolder>/<폴더>/ 보다 깊이 넣어 둔 노트는 옮기지 않는다.
   - 속성(authors, year, venue, url, zotero, pdf ...)은 **비어 있을 때만** 채운다. 직접 쓴 값은 건드리지 않는다.
+    예외: pdf 링크가 가리키는 파일이 없어졌으면(ZotMoov 가 옮긴 경우) Zotero 의 지금 경로로 고친다.
   - 논문의 자식 노트 중 Pass 2 노트(<h1>Pass 2</h1> 이거나 sections 와 같은 h2 가 있는 노트)의
     섹션을 볼트 노트의 같은 이름 헤더 밑 %% zotero:start %% ~ %% zotero:end %% 사이에 넣는다.
     그 사이는 매번 덮어쓴다. 수정은 Zotero에서. 노트 안 그림은 <imageFolder>/ 로 복사한다.
   - 이미 있는 노트는 zotero: 속성의 아이템 키로, 없으면 이름+연도로 짝을 찾는다.
+    키가 가리키는 아이템이 Zotero에서 지워졌으면(같은 논문을 다시 넣은 경우) 이름+연도로 다시 짝을 찾는다.
     애매하면 아무것도 하지 않고 로그(zotero-sync.log)에 남긴다. Zotero에 없는 노트는 건드리지 않는다.
 
   설정:   저장소 루트의 config.json (install.ps1 이 만든다. 예시는 config.example.json)
@@ -297,6 +301,12 @@ function Fill-Fm([string]$fm, [string]$key, [string]$value, [string]$after) {
   return $fm.TrimEnd("`n") + "`n" + $line
 }
 
+function Set-Fm([string]$fm, [string]$key, [string]$value) {
+  $m = [regex]::Match($fm, "(?m)^$([regex]::Escape($key)):[ \t]*(.*?)[ \t]*$")
+  if (-not $m.Success) { return Fill-Fm $fm $key $value }
+  return $fm.Substring(0, $m.Index) + "${key}: " + (Quote-Yaml $value) + $fm.Substring($m.Index + $m.Length)
+}
+
 function Update-Pass2([string]$body, $pass2, [string]$noteName) {
   foreach ($s in $Sections) {
     $h = [regex]::Match($body, '(?m)^(#{2,4}) ' + [regex]::Escape($s) + '[ \t]*$')
@@ -362,6 +372,8 @@ foreach ($it in (Get-All '/items')) {
   }
   if ($d['title']) { $parents.Add($it) }
 }
+$liveKeys = New-Object 'System.Collections.Generic.HashSet[string]'
+foreach ($it in $parents) { [void]$liveKeys.Add([string]$it['data']['key']) }
 
 # 볼트 논문 노트 목록
 $notes = New-Object System.Collections.Generic.List[object]
@@ -422,7 +434,7 @@ function Find-Note($info) {
   $tl = $info.Title.ToLowerInvariant()
   $cands = @($notes | Where-Object {
     $n = $_
-    if ($n.Key) { return $false }
+    if ($n.Key -and $liveKeys.Contains($n.Key)) { return $false }
     if ($n.Year -match '^\d{4}$' -and $info.Year -match '^\d{4}$' -and [Math]::Abs([int]$n.Year - [int]$info.Year) -gt 1) { return $false }
     foreach ($v in @($n.Name, $n.Title)) {
       if (-not $v) { continue }
@@ -494,17 +506,47 @@ foreach ($it in $parents) {
     $fm = Fill-Fm $fm 'venue' $info.Venue
     $fm = Fill-Fm $fm 'citekey' $info.CiteKey
     $fm = Fill-Fm $fm 'url' $info.Url
-    $fm = Fill-Fm $fm 'zotero' $info.Zotero
+    $fm = if ($n.Key -ne $info.Key) { Set-Fm $fm 'zotero' $info.Zotero } else { Fill-Fm $fm 'zotero' $info.Zotero }
     $fm = Fill-Fm $fm 'pdf' $info.Pdf 'zotero'
+    # pdf 링크의 파일이 없어졌으면 (ZotMoov 가 다른 폴더로 옮긴 경우) Zotero 의 지금 경로로
+    $curPdf = [string](Get-Fm $fm 'pdf')
+    if ($info.Pdf -and $curPdf -match '^\[\[([^\]|#]+/[^\]|#]+)' -and -not (Test-Path -LiteralPath (Join-Path $Vault $Matches[1].Replace('/', '\')))) {
+      $fm = Set-Fm $fm 'pdf' $info.Pdf
+    }
+    # 최상위 컬렉션이 바뀌었으면 노트도 그 폴더로 (컬렉션에서 빠졌거나 더 깊이 넣어 둔 노트는 그대로)
+    $moveTo = $null
+    $oldDir = Split-Path -Parent $n.Path
+    if ($info.Collection -and ($oldDir -eq $Papers -or (Split-Path -Parent $oldDir) -eq $Papers)) {
+      $folder = Join-Path $Papers (Safe-FileName $info.Collection)
+      if ($oldDir -ne $folder) {
+        $dest = Join-Path $folder (Split-Path -Leaf $n.Path)
+        if (Test-Path -LiteralPath $dest) { Say "? '$($n.Base).md' 를 $(Safe-FileName $info.Collection)/ 로 옮기려 했지만 같은 이름의 노트가 있어 그대로 둠" }
+        else {
+          $moveTo = $dest
+          $oldField = if ($oldDir -eq $Papers) { '' } else { Split-Path -Leaf $oldDir }
+          $curField = [string](Get-Fm $fm 'field')
+          if ($curField -in @('', '—', '-', $oldField)) { $fm = Set-Fm $fm 'field' $info.Collection }
+        }
+      }
+    }
     $body = $sp.Body
     if ($p2html) { $body = Update-Pass2 $body $pass2 $n.Base }
     $new = '---' + $fm + $body
-    if ($new -ne $raw.Replace("`r`n", "`n")) {
-      $how = if ($n.Key) { '갱신' } else { '연결' }
+    $changed = $new -ne $raw.Replace("`r`n", "`n")
+    if ($changed) {
+      $how = if ($n.Key -eq $info.Key) { '갱신' } else { '연결' }
       Say "~ $how  $($n.Path.Substring($Vault.Length + 1))"
       if (-not $DryRun) { Write-Note $n.Path $new $crlf }
-      $updated++
     }
+    if ($moveTo) {
+      Say "> 이동  $($n.Path.Substring($Vault.Length + 1)) → $($moveTo.Substring($Vault.Length + 1))"
+      if (-not $DryRun) {
+        if (-not (Test-Path -LiteralPath $folder)) { New-Item -ItemType Directory -Path $folder | Out-Null }
+        Move-Item -LiteralPath $n.Path -Destination $moveTo
+      }
+      $claimed.Remove($n.Path); $claimed[$moveTo] = $info.Key; $n.Path = $moveTo
+    }
+    if ($changed -or $moveTo) { $updated++ }
   }
   else {
     $folder = if ($info.Collection) { Join-Path $Papers (Safe-FileName $info.Collection) } else { $Papers }
