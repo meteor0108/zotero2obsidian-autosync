@@ -1,0 +1,17 @@
+{
+	"addons": {
+		"zotero2obsidian@meteor0108.github.io": {
+			"updates": [
+				{
+					"version": "2.0.0",
+					"update_link": "https://github.com/meteor0108/zotero2obsidian-autosync/releases/download/v2.0.0/zotero2obsidian.xpi",
+					"applications": {
+						"zotero": {
+							"strict_min_version": "7.0"
+						}
+					}
+				}
+			]
+		}
+	}
+}

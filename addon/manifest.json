@@ -12,6 +12,7 @@
 	"applications": {
 		"zotero": {
 			"id": "zotero2obsidian@meteor0108.github.io",
+			"update_url": "https://raw.githubusercontent.com/meteor0108/zotero2obsidian-autosync/main/updates.json",
 			"strict_min_version": "7.0",
 			"strict_max_version": "9.*"
 		}
