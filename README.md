@@ -44,7 +44,7 @@ Only Pass 2 is written in Zotero, because that is where the PDF and its figures 
 | Pass 3 | Assumptions, what you would have done, your thoughts and the paper's limitations, and what to take for your own writing |
 | Related concepts, After reading | The concepts the paper's contribution hinges on, and a wrap-up checklist |
 
-The templates are written in Korean. To use them in another language, see [Using your own language](#using-your-own-language).
+The templates are written in Korean. English versions are in [`templates/en/`](templates/en/); see [Using your own language](#using-your-own-language).
 
 ## What it does
 
@@ -131,10 +131,10 @@ If there is more than one candidate, nothing is done and the log says so. A pape
 
 ## Using your own language
 
-The templates and the default section names are in Korean, and the plugin's own interface is in English or Korean, following Zotero's language. To write notes in another language, change three things so that their headings match:
-1. **Sections to bring over** in the plugin settings, e.g. `1. Prior work`, `2. Limitations of prior work`, `3. Method`, `4. Results`
-2. The h2 headings of the Better Notes template (Zotero → Settings → Better Notes → Template Editor → `[Item]Paper Pass 2`)
-3. The headings of the vault note template (the "Note template" setting)
+The templates and the default section names are in Korean, and the plugin's own interface is in English or Korean, following Zotero's language. To write notes in another language, change three things so that their headings match. For English, [`templates/en/`](templates/en/) has both templates ready:
+1. **Sections to bring over** in the plugin settings. For the English templates: `1. Prior work`, `2. Limitations of prior work`, `3. Method`, `4. Experiments`
+2. The Better Notes template (Zotero → Settings → Better Notes → Template Editor → `[Item]Paper Pass 2`). Replace its content with [`templates/en/pass2-note.html`](templates/en/pass2-note.html)
+3. The vault note template (the file in the "Note template" setting). Copy [`templates/en/paper-note.md`](templates/en/paper-note.md) into your vault and point the setting to it
 
 ## Troubleshooting
 
@@ -169,6 +169,7 @@ addon/
   src/zotero2obsidian.js                  Zotero events, Better Notes, ZotMoov
   templates/                              vault note template, Pass 2 note template
   locale/                                 English and Korean strings
+templates/en/                             English versions of the two templates (not bundled)
 test/core.test.js                         tests for core.js
 updates.json                              update manifest Zotero reads
 ```

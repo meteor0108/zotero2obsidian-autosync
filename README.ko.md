@@ -44,6 +44,8 @@ Pass 2만 Zotero에서 쓰는 이유는 논문 PDF와 그림 옆에서 정리하
 | Pass 3 | 가정 목록, 나라면 이렇게 했다, 내 생각과 논문의 한계, 내 글쓰기에 가져갈 것 |
 | 관련 개념, 읽고 나면 | 이 논문의 기여가 걸린 개념, 마무리 체크리스트 |
 
+영어 템플릿은 [`templates/en/`](templates/en/)에 있습니다. [다른 언어로 쓰기](#다른-언어로-쓰기)를 보세요.
+
 ## 하는 일
 
 Zotero에 논문을 추가하면 Obsidian 볼트에 논문 노트가 생기고, Zotero에서 정리한 Pass 2 노트가 그 노트 안으로 계속 동기화됩니다.
@@ -129,10 +131,10 @@ Zotero 안에서 도는 플러그인이라 Zotero의 이벤트를 직접 받습�
 
 ## 다른 언어로 쓰기
 
-템플릿과 기본 섹션 이름은 한국어이고, 플러그인 화면은 Zotero 언어에 맞춰 영어나 한국어로 나옵니다. 노트를 다른 언어로 쓰려면 아래 세 곳의 헤더 이름을 서로 맞게 바꿉니다.
-1. 플러그인 설정의 **가져올 섹션** (예: `1. Prior work`, `2. Limitations of prior work`, `3. Method`, `4. Results`)
-2. Better Notes 템플릿의 h2 헤더 (Zotero → 설정 → Better Notes → Template Editor → `[Item]Paper Pass 2`)
-3. 볼트 노트 템플릿의 헤더 ("노트 템플릿" 설정의 파일)
+템플릿과 기본 섹션 이름은 한국어이고, 플러그인 화면은 Zotero 언어에 맞춰 영어나 한국어로 나옵니다. 노트를 다른 언어로 쓰려면 아래 세 곳의 헤더 이름을 서로 맞게 바꿉니다. 영어라면 [`templates/en/`](templates/en/)에 두 템플릿이 준비되어 있습니다.
+1. 플러그인 설정의 **가져올 섹션**. 영어 템플릿이면 `1. Prior work`, `2. Limitations of prior work`, `3. Method`, `4. Experiments`
+2. Better Notes 템플릿 (Zotero → 설정 → Better Notes → Template Editor → `[Item]Paper Pass 2`). 내용을 [`templates/en/pass2-note.html`](templates/en/pass2-note.html)로 바꿉니다
+3. 볼트 노트 템플릿 ("노트 템플릿" 설정의 파일). [`templates/en/paper-note.md`](templates/en/paper-note.md)를 볼트에 복사하고 설정이 그 파일을 가리키게 합니다
 
 ## 문제 해결
 
@@ -167,6 +169,7 @@ addon/
   src/zotero2obsidian.js                  Zotero 이벤트, Better Notes, ZotMoov 연결
   templates/                              볼트 노트 템플릿, Pass 2 노트 템플릿
   locale/                                 영어, 한국어 문구
+templates/en/                             두 템플릿의 영어 버전 (플러그인에는 들어가지 않음)
 test/core.test.js                         core.js 테스트
 updates.json                              Zotero가 읽는 업데이트 정보
 ```
