@@ -1,0 +1,58 @@
+<linkset>
+	<html:link rel="localization" href="zotero2obsidian.ftl"/>
+</linkset>
+
+<vbox id="zotero2obsidian-prefs" onload="Zotero2ObsidianPrefs.init()">
+	<groupbox>
+		<label><html:h2 data-l10n-id="z2o-pref-vault-title"/></label>
+		<hbox align="center">
+			<html:label for="z2o-vault" data-l10n-id="z2o-pref-vault"/>
+			<html:input id="z2o-vault" type="text" preference="extensions.zotero2obsidian.vaultPath" style="flex: 1;"/>
+			<button id="z2o-browse" data-l10n-id="z2o-pref-browse"/>
+		</hbox>
+		<hbox align="center">
+			<html:label for="z2o-papers" data-l10n-id="z2o-pref-papers"/>
+			<html:input id="z2o-papers" type="text" preference="extensions.zotero2obsidian.papersFolder" style="flex: 1;"/>
+		</hbox>
+		<hbox align="center">
+			<html:label for="z2o-template" data-l10n-id="z2o-pref-template"/>
+			<html:input id="z2o-template" type="text" preference="extensions.zotero2obsidian.templatePath" style="flex: 1;"/>
+		</hbox>
+		<hbox align="center">
+			<html:label for="z2o-images" data-l10n-id="z2o-pref-images"/>
+			<html:input id="z2o-images" type="text" preference="extensions.zotero2obsidian.imageFolder" data-l10n-id="z2o-pref-images-input" style="flex: 1;"/>
+		</hbox>
+		<html:p data-l10n-id="z2o-pref-paths-help"/>
+	</groupbox>
+
+	<groupbox>
+		<label><html:h2 data-l10n-id="z2o-pref-pass2-title"/></label>
+		<html:label for="z2o-sections" data-l10n-id="z2o-pref-sections"/>
+		<html:textarea id="z2o-sections" rows="4" preference="extensions.zotero2obsidian.sections"/>
+		<html:p data-l10n-id="z2o-pref-sections-help"/>
+		<checkbox native="true" preference="extensions.zotero2obsidian.autoPass2" data-l10n-id="z2o-pref-auto-pass2"/>
+		<hbox align="center" style="margin-inline-start: 24px;">
+			<html:label for="z2o-pass2-template" data-l10n-id="z2o-pref-pass2-template"/>
+			<html:input id="z2o-pass2-template" type="text" preference="extensions.zotero2obsidian.pass2Template" style="flex: 1;"/>
+		</hbox>
+		<html:p id="z2o-bn-status" style="margin-inline-start: 24px;"/>
+	</groupbox>
+
+	<groupbox>
+		<label><html:h2 data-l10n-id="z2o-pref-auto-title"/></label>
+		<checkbox native="true" preference="extensions.zotero2obsidian.autoSync" data-l10n-id="z2o-pref-auto-sync"/>
+		<checkbox native="true" preference="extensions.zotero2obsidian.moveNotes" data-l10n-id="z2o-pref-move-notes"/>
+		<checkbox native="true" preference="extensions.zotero2obsidian.movePdfs" data-l10n-id="z2o-pref-move-pdfs"/>
+		<html:p id="z2o-zotmoov-status" style="margin-inline-start: 24px;"/>
+	</groupbox>
+
+	<groupbox>
+		<label><html:h2 data-l10n-id="z2o-pref-run-title"/></label>
+		<hbox>
+			<button id="z2o-preview" data-l10n-id="z2o-pref-preview"/>
+			<button id="z2o-sync" data-l10n-id="z2o-pref-sync"/>
+		</hbox>
+		<html:p id="z2o-output-label" data-l10n-id="z2o-pref-log"/>
+		<html:textarea id="z2o-output" rows="12" readonly="true" style="font-family: monospace; font-size: 0.9em;"/>
+	</groupbox>
+</vbox>
