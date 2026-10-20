@@ -1,8 +1,14 @@
-# zotero2obsidian-autosync
+# Zotero2Obsidian Autosync
 
 [English](README.md) | **한국어**
 
-S. Keshav의 [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf)(three-pass 읽기법)를 Zotero와 Obsidian에서 그대로 따라 할 수 있게 만든 **논문 노트 템플릿**과, Zotero에서 정리한 노트를 Obsidian으로 **자동 동기화**하는 Zotero 플러그인입니다. Windows, macOS, Linux에서 동작합니다.
+[![Zotero plugin](https://img.shields.io/badge/Zotero%20plugin-7%E2%80%939-CC2936?logo=zotero&logoColor=white)](https://www.zotero.org/)
+[![Latest release](https://img.shields.io/github/v/release/meteor0108/zotero2obsidian-autosync?label=release)](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/meteor0108/zotero2obsidian-autosync/total)](https://github.com/meteor0108/zotero2obsidian-autosync/releases)
+
+Zotero에서 정리한 노트를 Obsidian으로 **자동 동기화**하는 **[Zotero](https://www.zotero.org/) 플러그인**입니다. S. Keshav의 [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf)(three-pass 읽기법)를 그대로 따라 할 수 있는 **논문 노트 템플릿**이 함께 들어 있습니다. Windows, macOS, Linux에서 동작합니다.
+
+**[zotero2obsidian.xpi 받기](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest/download/zotero2obsidian.xpi)** — 받은 파일을 Zotero에 설치합니다 (도구 → 플러그인 → Install Plugin From File…). 자세한 내용은 [설치](#설치)를 보세요.
 
 ![Zotero에서 Pass 2 노트를 쓰면 Obsidian 논문 노트가 몇 초 안에 생기고 채워지는 데모](docs/images/demo.gif)
 
@@ -68,7 +74,7 @@ Zotero 안에서 도는 플러그인이라 Zotero의 이벤트를 직접 받습�
 
 ## 설치
 
-1. [Releases](https://github.com/meteor0108/zotero2obsidian-autosync/releases)에서 `zotero2obsidian.xpi`를 받습니다. 직접 만들려면 아래 [개발](#개발)을 보세요.
+1. 최신 [Release](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest)에서 [`zotero2obsidian.xpi`](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest/download/zotero2obsidian.xpi)를 받습니다. 직접 만들려면 아래 [개발](#개발)을 보세요.
 2. Zotero → 도구 → 플러그인 → 톱니바퀴 → **Install Plugin From File…** 에서 받은 파일을 고릅니다.
 3. Zotero → 설정 → **Zotero2Obsidian Autosync**에서 볼트 폴더를 고릅니다. 나머지는 필요하면 바꿉니다.
 
@@ -176,7 +182,7 @@ updates.json                              Zotero가 읽는 업데이트 정보
 
 - 빌드: Windows는 `powershell -ExecutionPolicy Bypass -File build.ps1`, macOS·Linux는 `sh build.sh`. `build/zotero2obsidian.xpi`가 생깁니다.
 - 테스트: `node --test` (Node 18 이상)
-- 배포: `addon/manifest.json`의 `version`을 올리고, `updates.json`에 그 버전을 추가한 뒤, 빌드한 `.xpi`를 `v<버전>` 태그의 GitHub Release에 올립니다.
+- 배포: `addon/manifest.json`의 `version`을 올리고 `updates.json`에 그 버전을 추가해 커밋한 뒤, `v<버전>` 태그를 push합니다. GitHub Actions([`.github/workflows/release.yml`](.github/workflows/release.yml))가 테스트하고 빌드해서 `.xpi`를 붙인 Release를 만듭니다.
 
 ## 제거
 

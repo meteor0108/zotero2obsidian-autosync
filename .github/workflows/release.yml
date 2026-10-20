@@ -1,0 +1,43 @@
+# Pushing a tag like v2.0.0 tests and builds the plugin, and publishes it as a GitHub release
+# with zotero2obsidian.xpi attached (the file updates.json points Zotero to).
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Test
+        run: node --test
+
+      - name: Check that the tag matches the plugin version
+        run: |
+          version=$(node -p "require('./addon/manifest.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match manifest version $version" >&2
+            exit 1
+          fi
+          grep -q "\"version\": \"$version\"" updates.json || { echo "updates.json has no entry for $version" >&2; exit 1; }
+
+      - name: Build
+        run: sh build.sh
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/zotero2obsidian.xpi
+          body: |
+            **Install:** download `zotero2obsidian.xpi` below, then in Zotero go to Tools → Plugins → gear icon → Install Plugin From File…
+            **설치:** 아래 `zotero2obsidian.xpi`를 받아 Zotero → 도구 → 플러그인 → 톱니바퀴 → Install Plugin From File…에서 고릅니다.
+          generate_release_notes: true

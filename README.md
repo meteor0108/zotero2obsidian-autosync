@@ -1,8 +1,14 @@
-# zotero2obsidian-autosync
+# Zotero2Obsidian Autosync
 
 **English** | [한국어](README.ko.md)
 
-A **paper note template** for following S. Keshav's [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf) (the three-pass method) in Zotero and Obsidian, plus a Zotero plugin that **automatically syncs** the notes you write in Zotero into Obsidian. Works on Windows, macOS and Linux.
+[![Zotero plugin](https://img.shields.io/badge/Zotero%20plugin-7%E2%80%939-CC2936?logo=zotero&logoColor=white)](https://www.zotero.org/)
+[![Latest release](https://img.shields.io/github/v/release/meteor0108/zotero2obsidian-autosync?label=release)](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/meteor0108/zotero2obsidian-autosync/total)](https://github.com/meteor0108/zotero2obsidian-autosync/releases)
+
+A **plugin for [Zotero](https://www.zotero.org/)** that **automatically syncs** the notes you write in Zotero into Obsidian, with a **paper note template** for following S. Keshav's [How to Read a Paper](https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf) (the three-pass method). Works on Windows, macOS and Linux.
+
+**[Download zotero2obsidian.xpi](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest/download/zotero2obsidian.xpi)** and install it in Zotero (Tools → Plugins → Install Plugin From File…). See [Installation](#installation).
 
 ![Demo: writing a Pass 2 note in Zotero creates and fills the Obsidian paper note within seconds](docs/images/demo.gif)
 
@@ -68,7 +74,7 @@ The plugin runs inside Zotero and listens to Zotero's own events. After a change
 
 ## Installation
 
-1. Download `zotero2obsidian.xpi` from [Releases](https://github.com/meteor0108/zotero2obsidian-autosync/releases). To build it yourself, see [Development](#development).
+1. Download [`zotero2obsidian.xpi`](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest/download/zotero2obsidian.xpi) from the latest [release](https://github.com/meteor0108/zotero2obsidian-autosync/releases/latest). To build it yourself, see [Development](#development).
 2. In Zotero, go to Tools → Plugins → gear icon → **Install Plugin From File…** and choose the file.
 3. In Zotero → Settings → **Zotero2Obsidian Autosync**, choose your vault folder. Change the rest if you need to.
 
@@ -176,7 +182,7 @@ updates.json                              update manifest Zotero reads
 
 - Build: `powershell -ExecutionPolicy Bypass -File build.ps1` on Windows, `sh build.sh` on macOS and Linux. The result is `build/zotero2obsidian.xpi`.
 - Test: `node --test` (Node 18 or later)
-- Release: raise `version` in `addon/manifest.json`, add the version to `updates.json`, and attach the built `.xpi` to a GitHub release tagged `v<version>`.
+- Release: raise `version` in `addon/manifest.json`, add the version to `updates.json`, commit, and push a tag `v<version>`. GitHub Actions ([`.github/workflows/release.yml`](.github/workflows/release.yml)) tests, builds and publishes the release with the `.xpi` attached.
 
 ## Uninstall
 
